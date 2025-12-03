@@ -44,9 +44,7 @@ def download_model_with_retry(repo_id: str, cache_dir: str, local_dir: str) -> s
     """download model with automatic retry on network failures"""
     return snapshot_download(
         repo_id=repo_id,
-        cache_dir=cache_dir,
         local_dir=local_dir,
-        local_dir_use_symlinks=False,
         resume_download=True,
         ignore_patterns=["*.msgpack", "*.h5", "*.ot"],
     )
@@ -105,8 +103,18 @@ def run_prep_phase(cache_dir = Path("/app/models")) -> None:
         if not checkpoint_files:
             raise FileNotFoundError(f"No checkpoint file (*.pth or *.pt) found in {downloaded_path}")
 
+        # Check which checkpoint was downloaded
+        checkpoint_best = Path(downloaded_path) / "checkpoint_best.pt"
+        checkpoint_final = Path(downloaded_path) / "checkpoint_final.pt"
+        if checkpoint_best.exists():
+            checkpoint_name = "checkpoint_best.pt"
+        elif checkpoint_final.exists():
+            checkpoint_name = "checkpoint_final.pt"
+        else:
+            checkpoint_name = checkpoint_files[0].name
+
         print(f"✓ VARC checkpoint downloaded to: {downloaded_path}")
-        print(f"✓ Checkpoint file: {checkpoint_files[0].name}")
+        print(f"✓ Checkpoint file: {checkpoint_name}")
         files_count = len(list(Path(downloaded_path).glob('*')))
         print(f"✓ Total files in directory: {files_count}")
 
