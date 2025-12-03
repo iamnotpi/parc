@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+
+VARC/saves/
+
+test.py

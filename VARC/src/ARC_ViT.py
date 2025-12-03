@@ -1,6 +1,6 @@
 from typing import Optional, Tuple
 
-from utils.pos_embed import VisionRotaryEmbeddingFast
+from VARC.utils.pos_embed import VisionRotaryEmbeddingFast
 import torch
 from torch import nn
 
